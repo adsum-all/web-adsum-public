@@ -36,6 +36,19 @@ const PAYS_PAR_ZONE: Record<string, string> = {
   "Africa/Nairobi": "Kenya", "Africa/Johannesburg": "Afrique du Sud",
 };
 
+// A member matricule is ADS-XX-NNNNNN-Y (3-letter prefix, 2 letters, 6 digits, 1
+// letter). Members should only have to type the characters; the dashes are inserted
+// as they go, so a valid code is never rejected for a missing or misplaced dash.
+// Works for paste too (existing dashes/spaces are stripped, then re-inserted).
+function formatMatricule(raw: string): string {
+  const s = raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+  let out = s.slice(0, 3);
+  if (s.length > 3) out += "-" + s.slice(3, 5);
+  if (s.length > 5) out += "-" + s.slice(5, 11);
+  if (s.length > 11) out += "-" + s.slice(11, 12);
+  return out;
+}
+
 function paysLocal(): string {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -280,10 +293,11 @@ function Identification({
             <span>Matricule ADSUM</span>
             <input
               value={matricule}
-              onChange={(e) => setMatricule(e.target.value.toUpperCase())}
+              onChange={(e) => setMatricule(formatMatricule(e.target.value))}
               placeholder="ADS-AM-000123-Q"
               inputMode="text"
               autoComplete="off"
+              maxLength={15}
               style={{ textTransform: "uppercase" }}
             />
           </label>
