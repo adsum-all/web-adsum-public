@@ -164,11 +164,15 @@ function Flux({ event, evenementId }: { event: EventCard; evenementId: string })
   return (
     <div className="em-card">
       <div className="em-hero">
+        {/* Only the survey STATUS is shown here. The activity mode (in person /
+            online) is intentionally NOT displayed: this survey is for everyone,
+            whatever their mode, and a mode badge made members think it was
+            reserved to one audience. The member states their own mode inside the
+            form itself. */}
         <div className="em-badges">
           <span className={`em-badge ${event.cloture ? "em-badge-off" : event.ouvert ? "em-badge-on" : ""}`}>
             <span className="em-dot" /> {event.cloture ? "Sondage clôturé" : event.ouvert ? "Sondage ouvert" : "Pas encore ouvert"}
           </span>
-          <span className="em-badge em-badge-neutral">{event.en_ligne ? "Diffusion en ligne" : "En présentiel"}</span>
         </div>
         <h1 className="em-title">{event.titre}</h1>
       </div>
