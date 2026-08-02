@@ -1,6 +1,7 @@
 import { Emargement } from "./components/Emargement.js";
 import { Engagement } from "./components/Engagement.js";
 import { QrDemo } from "./components/QrDemo.js";
+import { useMarque } from "./useMarque.js";
 
 const FEATURES = [
   {
@@ -37,6 +38,7 @@ const NUMBERS = [
 ];
 
 export function App(): JSX.Element {
+  const marque = useMarque();
   // The external check-in link carries the event id: /?e=<evenement_id>. When
   // present, the whole page becomes the lightweight attendance flow.
   const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
@@ -54,7 +56,7 @@ export function App(): JSX.Element {
   return (
     <div className="page">
       <header className="nav">
-        <span className="brand">ADSUM</span>
+        <span className="brand">{marque.marque}</span>
         <span className="nav-tag">Présence des membres</span>
       </header>
 
@@ -102,7 +104,7 @@ export function App(): JSX.Element {
       </main>
 
       <footer className="footer">
-        <span>ADSUM</span>
+        <span>{marque.marque}</span>
         <span>Données réelles, zéro mock. Signature et validation côté serveur.</span>
       </footer>
     </div>
