@@ -8,6 +8,8 @@ import {
   getEventCard,
   identifier,
 } from "../emargement.js";
+import { mot } from "../marque.js";
+import { useMarque } from "../useMarque.js";
 import { PaysIndicatifCombo } from "./PaysIndicatifCombo.js";
 
 type Etape = "accueil" | "identite" | "questionnaire" | "confirme";
@@ -60,18 +62,20 @@ function paysLocal(): string {
 }
 
 function BrandBar(): JSX.Element {
+  const marque = useMarque();
   return (
     <header className="em-brandbar">
-      <div className="em-logo">A</div>
+      <div className="em-logo">{marque.initiale}</div>
       <div className="em-brandtext">
-        <span className="em-b1">ADSUM</span>
-        <span className="em-b2">Sacerdoce Royal</span>
+        <span className="em-b1">{marque.marque}</span>
+        <span className="em-b2">{marque.organisation}</span>
       </div>
     </header>
   );
 }
 
 export function Emargement({ evenementId }: { evenementId: string }): JSX.Element {
+  const marque = useMarque();
   const [event, setEvent] = useState<EventCard | null>(null);
   const [chargement, setChargement] = useState(true);
   const [erreurEvent, setErreurEvent] = useState<string | null>(null);
@@ -101,7 +105,7 @@ export function Emargement({ evenementId }: { evenementId: string }): JSX.Elemen
         {!chargement && event && <Flux event={event} evenementId={evenementId} />}
       </main>
       <footer className="em-footer">
-        Sondage de présence <strong>ADSUM</strong>, Sacerdoce Royal. Un seul enregistrement par personne et par activité, tous canaux confondus.
+        Sondage de présence <strong>{marque.marque}</strong>, {marque.organisation}. Un seul enregistrement par personne et par activité, tous canaux confondus.
       </footer>
     </div>
   );
@@ -226,6 +230,7 @@ function Identification({
   evenementId: string;
   onIdentifie: (id: Identite) => void;
 }): JSX.Element {
+  const marque = useMarque();
   const [mode, setMode] = useState<"choix" | "matricule" | "code_membre" | "telephone">("choix");
   const [matricule, setMatricule] = useState("");
   const [codeMembre, setCodeMembre] = useState("");
@@ -291,10 +296,10 @@ function Identification({
           <h2 className="em-h2">Avec mon matricule ADSUM</h2>
           <p className="em-muted em-center">
             Saisissez le matricule membre qui vous a été attribué et communiqué. Si vous ne l&apos;avez pas,
-            rapprochez-vous d&apos;un berger.
+            rapprochez-vous de {mot(marque, "berger", "singulier", "votre berger")}.
           </p>
           <label className="em-field">
-            <span>Matricule ADSUM</span>
+            <span>Matricule {marque.marque}</span>
             <input
               value={matricule}
               onChange={(e) => setMatricule(formatMatricule(e.target.value))}

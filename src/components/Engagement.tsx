@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { PAYS } from "../countries.js";
+import { useMarque } from "../useMarque.js";
 import { InfoTip } from "./InfoTip.js";
 import { PaysIndicatifCombo } from "./PaysIndicatifCombo.js";
 
@@ -18,12 +19,13 @@ function capitaliserPrenom(valeur: string): string {
 }
 
 function Brandbar(): JSX.Element {
+  const marque = useMarque();
   return (
     <div className="eng-brand">
-      <div className="eng-logo">A</div>
+      <div className="eng-logo">{marque.initiale}</div>
       <div className="eng-brand-text">
-        <span className="eng-brand-name">ADSUM</span>
-        <span className="eng-brand-sub">Sacerdoce Royal</span>
+        <span className="eng-brand-name">{marque.marque}</span>
+        <span className="eng-brand-sub">{marque.organisation}</span>
       </div>
     </div>
   );
@@ -38,6 +40,7 @@ function Brandbar(): JSX.Element {
  * to an activity, the form shows that activity as a discreet context.
  */
 export function Engagement({ evenementId }: { evenementId: string | null }): JSX.Element {
+  const marque = useMarque();
   const [email, setEmail] = useState("");
   const [premierPrenom, setPremierPrenom] = useState("");
   const [autresPrenoms, setAutresPrenoms] = useState("");
@@ -114,9 +117,9 @@ export function Engagement({ evenementId }: { evenementId: string | null }): JSX
           <p className="eng-intro" style={{ textAlign: "center" }}>
             {etat === "deja"
               ? "Cette adresse e-mail a déjà exprimé le souhait de s'engager. Nous reviendrons vers vous très prochainement."
-              : "Merci d'avoir fait ce beau choix et d'avoir exprimé votre souhait de vous engager au sein de la fraternité du Sacerdoce Royal. Votre demande a bien été reçue ; un membre de l'équipe vous recontactera avec les prochaines étapes."}
+              : `Merci d'avoir fait ce beau choix et d'avoir exprimé votre souhait de vous engager au sein de ${marque.organisation}. Votre demande a bien été reçue ; un membre de l'équipe vous recontactera avec les prochaines étapes.`}
           </p>
-          <p className="eng-sign">Bien fraternellement, l'équipe du Sacerdoce Royal</p>
+          <p className="eng-sign">Bien fraternellement, l&apos;équipe de {marque.organisation}</p>
         </div>
       </div>
     );
@@ -131,7 +134,7 @@ export function Engagement({ evenementId }: { evenementId: string | null }): JSX
         <div className="eng-head">
           <h1 className="eng-title">Je souhaite m'engager</h1>
           <p className="eng-intro">
-            Laissez vos coordonnées pour rejoindre la fraternité du Sacerdoce Royal. Un membre de l'équipe vous
+            Laissez vos coordonnées pour rejoindre {marque.organisation}. Un membre de l&apos;équipe vous
             recontactera avec les prochaines étapes.
           </p>
           {activite && (
